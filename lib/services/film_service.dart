@@ -8,16 +8,11 @@ class FilmService extends ChangeNotifier {
 
   FilmService(this.repository);
 
-  List<Film> get films {
-    return repository.getAll();
-  }
+  List<Film> get films => repository.getAll();
 
   List<String> get genres {
-    final result =
-        films.map((film) => film.genre).toSet().toList();
-
+    final result = films.map((film) => film.genre).toSet().toList();
     result.sort();
-
     return result;
   }
 

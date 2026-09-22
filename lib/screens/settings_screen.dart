@@ -15,7 +15,6 @@ class SettingsScreen extends StatelessWidget {
       appBar: AppBar(
         title: const Text('Paramètres'),
       ),
-
       body: ListView(
         padding: const EdgeInsets.all(16),
         children: [
@@ -23,7 +22,7 @@ class SettingsScreen extends StatelessWidget {
             child: SwitchListTile(
               title: const Text('Mode sombre'),
               subtitle: const Text(
-                'Modifier l apparence de l application',
+                'Activer ou désactiver le thème sombre',
               ),
               secondary: const Icon(Icons.dark_mode),
               value: themeController.isDark,
@@ -37,21 +36,21 @@ class SettingsScreen extends StatelessWidget {
 
           const SizedBox(height: 16),
 
-          const Card(
+          Card(
             child: ListTile(
-              leading: Icon(Icons.info),
-              title: Text('À propos'),
-              subtitle: Text(
-                'CineApp — Projet Flutter multi-écrans',
+              leading: const Icon(Icons.info),
+              title: const Text('À propos'),
+              subtitle: const Text(
+                'CineApp - Application de découverte de films ivoiriens',
               ),
             ),
           ),
 
-          const Card(
+          Card(
             child: ListTile(
-              leading: Icon(Icons.code),
-              title: Text('Technologies'),
-              subtitle: Text(
+              leading: const Icon(Icons.code),
+              title: const Text('Technologies'),
+              subtitle: const Text(
                 'Flutter, Dart, GoRouter et Provider',
               ),
             ),

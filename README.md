@@ -1,31 +1,47 @@
-# CinéApp
+# CineApp
 
-CinéApp est une application Flutter multi-écrans réalisée dans le cadre d'un exercice de développement Flutter.
+Application Flutter de découverte de films ivoiriens.
+
+## Description
+
+CineApp est une application mobile développée avec Flutter.
+Elle permet de consulter une liste de films ivoiriens,
+effectuer des recherches, filtrer les films par genre,
+consulter leurs détails et ajouter de nouveaux films.
 
 ## Fonctionnalités
 
 - Accueil
 - Liste des films
-- Recherche de films
-- Filtrage par genre
-- Écran de détail
-- Formulaire d'ajout
-- Validation de formulaire
-- Mode clair
+- Recherche
+- Filtre par genre
+- Détails d'un film
+- Ajout d'un film
+- Validation des formulaires
+- Paramètres
 - Mode sombre
-- Interface responsive mobile/tablette
 - Navigation avec GoRouter
-- Widgets réutilisables
+- Gestion d'état avec Provider
+- Interface responsive mobile/tablette
 
 ## Technologies
 
 - Flutter
 - Dart
 - GoRouter
+- Provider
+- Material 3
 
-## Installation
+## Architecture
 
-Cloner le projet :
-
-```bash
-git clone URL_DU_REPOSITORY
+```text
+lib/
+├── data/
+├── models/
+├── repositories/
+├── services/
+├── router/
+├── screens/
+├── theme/
+├── utils/
+└── widgets/

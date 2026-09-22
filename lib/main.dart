@@ -11,12 +11,13 @@ void main() {
   final repository =
       InMemoryFilmRepository(filmsInitiaux);
 
-  final filmService = FilmService(repository);
+  final filmService =
+      FilmService(repository);
 
   runApp(
     MultiProvider(
       providers: [
-        ChangeNotifierProvider<ThemeController>(
+        ChangeNotifierProvider(
           create: (_) => ThemeController(),
         ),
 
@@ -32,33 +33,32 @@ void main() {
 class CineApp extends StatelessWidget {
   const CineApp({super.key});
 
+  static final _router = createAppRouter();
+
   @override
   Widget build(BuildContext context) {
-    final router = createAppRouter();
+    final themeController =
+        context.watch<ThemeController>();
 
-    return Consumer<ThemeController>(
-      builder: (context, themeController, child) {
-        return MaterialApp.router(
-          title: 'CineApp',
-          debugShowCheckedModeBanner: false,
+    return MaterialApp.router(
+      title: 'CineApp',
+      debugShowCheckedModeBanner: false,
 
-          routerConfig: router,
+      routerConfig: _router,
 
-          theme: ThemeData(
-            useMaterial3: true,
-            brightness: Brightness.light,
-            colorSchemeSeed: Colors.indigo,
-          ),
+      theme: ThemeData(
+        useMaterial3: true,
+        brightness: Brightness.light,
+        colorSchemeSeed: Colors.indigo,
+      ),
 
-          darkTheme: ThemeData(
-            useMaterial3: true,
-            brightness: Brightness.dark,
-            colorSchemeSeed: Colors.indigo,
-          ),
+      darkTheme: ThemeData(
+        useMaterial3: true,
+        brightness: Brightness.dark,
+        colorSchemeSeed: Colors.indigo,
+      ),
 
-          themeMode: themeController.themeMode,
-        );
-      },
+      themeMode: themeController.themeMode,
     );
   }
 }

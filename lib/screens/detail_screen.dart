@@ -14,38 +14,30 @@ class DetailScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Détail du film'),
+        title: const Text('Détails du film'),
       ),
       body: SingleChildScrollView(
-        padding: const EdgeInsets.all(24),
+        padding: const EdgeInsets.all(20),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Stack(
-              alignment: Alignment.center,
-              children: [
-                Container(
-                  width: double.infinity,
-                  height: 220,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(16),
-                    color: Theme.of(context)
-                        .colorScheme
-                        .primaryContainer,
-                  ),
-                ),
-                const Icon(
-                  Icons.movie,
-                  size: 90,
-                ),
-              ],
+            Container(
+              width: double.infinity,
+              height: 220,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(20),
+                color: Theme.of(context)
+                    .colorScheme
+                    .primaryContainer,
+              ),
+              child: const Icon(
+                Icons.movie,
+                size: 90,
+              ),
             ),
+
             const SizedBox(height: 24),
-            Chip(
-              avatar: const Icon(Icons.category),
-              label: Text(film.genre),
-            ),
-            const SizedBox(height: 12),
+
             Text(
               film.titre,
               style: Theme.of(context)
@@ -55,12 +47,32 @@ class DetailScreen extends StatelessWidget {
                     fontWeight: FontWeight.bold,
                   ),
             ),
-            const SizedBox(height: 8),
-            Text(
-              'Année de sortie : ${film.annee}',
-              style: Theme.of(context).textTheme.titleMedium,
+
+            const SizedBox(height: 12),
+
+            Wrap(
+              spacing: 8,
+              runSpacing: 8,
+              children: [
+                Chip(
+                  avatar: const Icon(
+                    Icons.category,
+                    size: 18,
+                  ),
+                  label: Text(film.genre),
+                ),
+                Chip(
+                  avatar: const Icon(
+                    Icons.calendar_today,
+                    size: 18,
+                  ),
+                  label: Text('${film.annee}'),
+                ),
+              ],
             ),
-            const Divider(height: 32),
+
+            const SizedBox(height: 24),
+
             Text(
               'Description',
               style: Theme.of(context)
@@ -70,10 +82,14 @@ class DetailScreen extends StatelessWidget {
                     fontWeight: FontWeight.bold,
                   ),
             ),
-            const SizedBox(height: 12),
+
+            const SizedBox(height: 10),
+
             Text(
               film.description,
-              style: Theme.of(context).textTheme.bodyLarge,
+              style: Theme.of(context)
+                  .textTheme
+                  .bodyLarge,
             ),
           ],
         ),
