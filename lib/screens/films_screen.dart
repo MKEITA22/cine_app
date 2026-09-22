@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:provider/provider.dart';
 
 import '../services/film_service.dart';
 import '../widgets/empty_state_widget.dart';
@@ -8,12 +9,7 @@ import '../widgets/genre_chip.dart';
 import '../widgets/search_bar_widget.dart';
 
 class FilmsScreen extends StatefulWidget {
-  final FilmService filmService;
-
-  const FilmsScreen({
-    super.key,
-    required this.filmService,
-  });
+  const FilmsScreen({super.key});
 
   @override
   State<FilmsScreen> createState() => _FilmsScreenState();
@@ -25,12 +21,14 @@ class _FilmsScreenState extends State<FilmsScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final films = widget.filmService.rechercher(
+    final filmService = context.watch<FilmService>();
+
+    final films = filmService.rechercher(
       recherche: _recherche,
       genre: _genreSelectionne,
     );
 
-    final genres = widget.filmService.genres;
+    final genres = filmService.genres;
 
     return Scaffold(
       appBar: AppBar(
@@ -44,6 +42,7 @@ class _FilmsScreenState extends State<FilmsScreen> {
           ),
         ],
       ),
+
       floatingActionButton: FloatingActionButton.extended(
         onPressed: () {
           context.goNamed('add');
@@ -51,6 +50,7 @@ class _FilmsScreenState extends State<FilmsScreen> {
         icon: const Icon(Icons.add),
         label: const Text('Ajouter'),
       ),
+
       body: Padding(
         padding: const EdgeInsets.all(16),
         child: Column(
@@ -62,7 +62,9 @@ class _FilmsScreenState extends State<FilmsScreen> {
                 });
               },
             ),
+
             const SizedBox(height: 12),
+
             SizedBox(
               height: 50,
               child: ListView(
@@ -77,6 +79,7 @@ class _FilmsScreenState extends State<FilmsScreen> {
                       });
                     },
                   ),
+
                   ...genres.map(
                     (genre) => GenreChip(
                       genre: genre,
@@ -92,7 +95,9 @@ class _FilmsScreenState extends State<FilmsScreen> {
                 ],
               ),
             ),
+
             const SizedBox(height: 12),
+
             Expanded(
               child: films.isEmpty
                   ? const EmptyStateWidget(
@@ -104,7 +109,9 @@ class _FilmsScreenState extends State<FilmsScreen> {
                         if (constraints.maxWidth >= 700) {
                           return GridView.builder(
                             padding:
-                                const EdgeInsets.only(bottom: 80),
+                                const EdgeInsets.only(
+                              bottom: 80,
+                            ),
                             gridDelegate:
                                 const SliverGridDelegateWithFixedCrossAxisCount(
                               crossAxisCount: 2,
@@ -129,7 +136,9 @@ class _FilmsScreenState extends State<FilmsScreen> {
 
                         return ListView.builder(
                           padding:
-                              const EdgeInsets.only(bottom: 80),
+                              const EdgeInsets.only(
+                            bottom: 80,
+                          ),
                           itemCount: films.length,
                           itemBuilder: (context, index) {
                             final film = films[index];

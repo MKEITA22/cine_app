@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 import 'data/film_data.dart';
 import 'repositories/film_repository.dart';
@@ -12,42 +13,49 @@ void main() {
 
   final filmService = FilmService(repository);
 
-  final router = createAppRouter(filmService);
-
   runApp(
-    CineApp(
-      router: router,
+    MultiProvider(
+      providers: [
+        ChangeNotifierProvider<ThemeController>(
+          create: (_) => ThemeController(),
+        ),
+
+        ChangeNotifierProvider<FilmService>.value(
+          value: filmService,
+        ),
+      ],
+      child: const CineApp(),
     ),
   );
 }
 
 class CineApp extends StatelessWidget {
-  final RouterConfig<Object> router;
-
-  const CineApp({
-    super.key,
-    required this.router,
-  });
+  const CineApp({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return AnimatedBuilder(
-      animation: themeController,
-      builder: (context, child) {
+    final router = createAppRouter();
+
+    return Consumer<ThemeController>(
+      builder: (context, themeController, child) {
         return MaterialApp.router(
           title: 'CineApp',
           debugShowCheckedModeBanner: false,
+
           routerConfig: router,
+
           theme: ThemeData(
             useMaterial3: true,
             brightness: Brightness.light,
             colorSchemeSeed: Colors.indigo,
           ),
+
           darkTheme: ThemeData(
             useMaterial3: true,
             brightness: Brightness.dark,
             colorSchemeSeed: Colors.indigo,
           ),
+
           themeMode: themeController.themeMode,
         );
       },

@@ -1,7 +1,9 @@
+import 'package:flutter/foundation.dart';
+
 import '../models/film.dart';
 import '../repositories/film_repository.dart';
 
-class FilmService {
+class FilmService extends ChangeNotifier {
   final FilmRepository repository;
 
   FilmService(this.repository);
@@ -11,8 +13,11 @@ class FilmService {
   }
 
   List<String> get genres {
-    final result = films.map((film) => film.genre).toSet().toList();
+    final result =
+        films.map((film) => film.genre).toSet().toList();
+
     result.sort();
+
     return result;
   }
 
@@ -35,5 +40,6 @@ class FilmService {
 
   void ajouterFilm(Film film) {
     repository.add(film);
+    notifyListeners();
   }
 }

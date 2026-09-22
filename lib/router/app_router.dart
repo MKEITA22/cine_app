@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
 import '../models/film.dart';
@@ -6,11 +7,11 @@ import '../screens/detail_screen.dart';
 import '../screens/films_screen.dart';
 import '../screens/home_screen.dart';
 import '../screens/settings_screen.dart';
-import '../services/film_service.dart';
 
-GoRouter createAppRouter(FilmService filmService) {
+GoRouter createAppRouter() {
   return GoRouter(
     initialLocation: '/',
+
     routes: [
       GoRoute(
         path: '/',
@@ -19,15 +20,15 @@ GoRouter createAppRouter(FilmService filmService) {
           return const HomeScreen();
         },
       ),
+
       GoRoute(
         path: '/films',
         name: 'films',
         builder: (context, state) {
-          return FilmsScreen(
-            filmService: filmService,
-          );
+          return const FilmsScreen();
         },
       ),
+
       GoRoute(
         path: '/detail',
         name: 'detail',
@@ -39,15 +40,15 @@ GoRouter createAppRouter(FilmService filmService) {
           );
         },
       ),
+
       GoRoute(
-        path: '/add',
-        name: 'add',
-        builder: (context, state) {
-          return AddFilmScreen(
-            filmService: filmService,
-          );
-        },
-      ),
+  path: '/add',
+  name: 'add',
+  builder: (context, state) {
+    return const AddFilmScreen();
+  },
+),
+
       GoRoute(
         path: '/settings',
         name: 'settings',

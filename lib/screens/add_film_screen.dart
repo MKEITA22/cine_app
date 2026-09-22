@@ -1,17 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:provider/provider.dart';
 
 import '../models/film.dart';
 import '../services/film_service.dart';
 import '../utils/validators.dart';
 
 class AddFilmScreen extends StatefulWidget {
-  final FilmService filmService;
-
-  const AddFilmScreen({
-    super.key,
-    required this.filmService,
-  });
+  const AddFilmScreen({super.key});
 
   @override
   State<AddFilmScreen> createState() => _AddFilmScreenState();
@@ -48,12 +44,17 @@ class _AddFilmScreenState extends State<AddFilmScreen> {
       annee: int.parse(
         _anneeController.text.trim(),
       ),
-      description: _descriptionController.text.trim().isEmpty
-          ? 'Aucune description.'
-          : _descriptionController.text.trim(),
+      description:
+          _descriptionController.text.trim().isEmpty
+              ? 'Aucune description.'
+              : _descriptionController.text.trim(),
     );
 
-    widget.filmService.ajouterFilm(film);
+
+    final filmService = context.read<FilmService>();
+
+
+    filmService.ajouterFilm(film);
 
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(
@@ -75,7 +76,8 @@ class _AddFilmScreenState extends State<AddFilmScreen> {
         child: Form(
           key: _formKey,
           child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
+            crossAxisAlignment:
+                CrossAxisAlignment.stretch,
             children: [
               Text(
                 'Nouveau film',
@@ -86,56 +88,73 @@ class _AddFilmScreenState extends State<AddFilmScreen> {
                       fontWeight: FontWeight.bold,
                     ),
               ),
+
               const SizedBox(height: 24),
+
               TextFormField(
                 controller: _titreController,
                 validator: validateTitre,
                 decoration: const InputDecoration(
                   labelText: 'Titre',
-                  hintText: 'Ex : Matrix',
+                  hintText: 'Ex : Bal Poussière',
                   prefixIcon: Icon(Icons.movie),
                   border: OutlineInputBorder(),
                 ),
               ),
+
               const SizedBox(height: 16),
+
               TextFormField(
                 controller: _genreController,
                 validator: validateGenre,
                 decoration: const InputDecoration(
                   labelText: 'Genre',
-                  hintText: 'Ex : Science-fiction',
+                  hintText: 'Ex : Comédie',
                   prefixIcon: Icon(Icons.category),
                   border: OutlineInputBorder(),
                 ),
               ),
+
               const SizedBox(height: 16),
+
               TextFormField(
                 controller: _anneeController,
                 validator: validateAnnee,
-                keyboardType: TextInputType.number,
+                keyboardType:
+                    TextInputType.number,
                 decoration: const InputDecoration(
                   labelText: 'Année',
-                  hintText: 'Ex : 2020',
-                  prefixIcon: Icon(Icons.calendar_today),
+                  hintText: 'Ex : 1988',
+                  prefixIcon:
+                      Icon(Icons.calendar_today),
                   border: OutlineInputBorder(),
                 ),
               ),
+
               const SizedBox(height: 16),
+
               TextFormField(
-                controller: _descriptionController,
+                controller:
+                    _descriptionController,
                 maxLines: 4,
                 decoration: const InputDecoration(
                   labelText: 'Description',
-                  hintText: 'Décrivez le film...',
-                  prefixIcon: Icon(Icons.description),
+                  hintText:
+                      'Décrivez le film...',
+                  prefixIcon:
+                      Icon(Icons.description),
                   border: OutlineInputBorder(),
                 ),
               ),
+
               const SizedBox(height: 24),
+
               ElevatedButton.icon(
                 onPressed: _ajouterFilm,
                 icon: const Icon(Icons.save),
-                label: const Text('Enregistrer le film'),
+                label: const Text(
+                  'Enregistrer le film',
+                ),
               ),
             ],
           ),
