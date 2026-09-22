@@ -16,20 +16,8 @@ class GenreChip extends StatelessWidget {
   Widget build(BuildContext context) {
     return FilterChip(
       label: Text(genre),
-
       selected: selected,
-
-      avatar: Icon(
-        Icons.category,
-        size: 18,
-        color: selected
-            ? Theme.of(context).colorScheme.primary
-            : null,
-      ),
-
-      onSelected: (_) {
-        onSelected();
-      },
+      onSelected: (_) => onSelected(),
     );
   }
 }

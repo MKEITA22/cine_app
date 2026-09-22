@@ -10,28 +10,14 @@ class SearchBarWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(12),
-
-      child: TextField(
-        onChanged: onChanged,
-
-        decoration: InputDecoration(
-          labelText: 'Rechercher un film',
-
-          hintText: 'Exemple : Inception',
-
-          prefixIcon: const Icon(
-            Icons.search,
-          ),
-
-          suffixIcon: const Icon(
-            Icons.movie,
-          ),
-
-          border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(12),
-          ),
+    return TextField(
+      onChanged: onChanged,
+      decoration: InputDecoration(
+        hintText: 'Rechercher un film...',
+        prefixIcon: const Icon(Icons.search),
+        suffixIcon: const Icon(Icons.movie),
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(12),
         ),
       ),
     );

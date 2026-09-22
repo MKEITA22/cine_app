@@ -1,63 +1,56 @@
 import 'package:flutter/material.dart';
 
+import 'data/film_data.dart';
+import 'repositories/film_repository.dart';
 import 'router/app_router.dart';
+import 'services/film_service.dart';
 import 'theme/theme_controller.dart';
 
 void main() {
-  runApp(const CineApp());
+  final repository =
+      InMemoryFilmRepository(filmsInitiaux);
+
+  final filmService = FilmService(repository);
+
+  final router = createAppRouter(filmService);
+
+  runApp(
+    CineApp(
+      router: router,
+    ),
+  );
 }
 
-class CineApp extends StatefulWidget {
-  const CineApp({super.key});
+class CineApp extends StatelessWidget {
+  final RouterConfig<Object> router;
 
-  @override
-  State<CineApp> createState() => _CineAppState();
-}
-
-class _CineAppState extends State<CineApp> {
-  @override
-  void initState() {
-    super.initState();
-
-    themeController.addListener(_themeChanged);
-  }
-
-  void _themeChanged() {
-    setState(() {});
-  }
-
-  @override
-  void dispose() {
-    themeController.removeListener(_themeChanged);
-    super.dispose();
-  }
+  const CineApp({
+    super.key,
+    required this.router,
+  });
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp.router(
-      debugShowCheckedModeBanner: false,
-
-      title: 'CinéApp',
-
-      routerConfig: appRouter,
-
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(
-          seedColor: Colors.indigo,
-          brightness: Brightness.light,
-        ),
-        useMaterial3: true,
-      ),
-
-      darkTheme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(
-          seedColor: Colors.indigo,
-          brightness: Brightness.dark,
-        ),
-        useMaterial3: true,
-      ),
-
-      themeMode: themeController.themeMode,
+    return AnimatedBuilder(
+      animation: themeController,
+      builder: (context, child) {
+        return MaterialApp.router(
+          title: 'CineApp',
+          debugShowCheckedModeBanner: false,
+          routerConfig: router,
+          theme: ThemeData(
+            useMaterial3: true,
+            brightness: Brightness.light,
+            colorSchemeSeed: Colors.indigo,
+          ),
+          darkTheme: ThemeData(
+            useMaterial3: true,
+            brightness: Brightness.dark,
+            colorSchemeSeed: Colors.indigo,
+          ),
+          themeMode: themeController.themeMode,
+        );
+      },
     );
   }
 }

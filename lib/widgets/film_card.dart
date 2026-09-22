@@ -15,58 +15,56 @@ class FilmCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Card(
-      margin: const EdgeInsets.all(8),
-
       elevation: 3,
-
+      margin: const EdgeInsets.all(8),
       child: InkWell(
         onTap: onTap,
-
         borderRadius: BorderRadius.circular(12),
-
         child: Padding(
-          padding: const EdgeInsets.all(12),
-
+          padding: const EdgeInsets.all(16),
           child: Row(
             children: [
-              CircleAvatar(
-                radius: 28,
-                child: Text(
-                  film.titre[0],
-                  style: const TextStyle(
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold,
-                  ),
+              Container(
+                width: 60,
+                height: 80,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(8),
+                  color: Theme.of(context)
+                      .colorScheme
+                      .primaryContainer,
+                ),
+                child: const Icon(
+                  Icons.movie,
+                  size: 32,
                 ),
               ),
-
-              const SizedBox(width: 15),
-
+              const SizedBox(width: 16),
               Expanded(
                 child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
+                  crossAxisAlignment:
+                      CrossAxisAlignment.start,
                   children: [
                     Text(
                       film.titre,
-                      style: const TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.bold,
-                      ),
+                      style: Theme.of(context)
+                          .textTheme
+                          .titleMedium
+                          ?.copyWith(
+                            fontWeight: FontWeight.bold,
+                          ),
                     ),
-
-                    const SizedBox(height: 5),
-
+                    const SizedBox(height: 6),
+                    Text('${film.genre} • ${film.annee}'),
+                    const SizedBox(height: 6),
                     Text(
-                      '${film.genre} • ${film.annee}',
+                      film.description,
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
                     ),
                   ],
                 ),
               ),
-
-              const Icon(
-                Icons.arrow_forward_ios,
-                size: 18,
-              ),
+              const Icon(Icons.chevron_right),
             ],
           ),
         ),

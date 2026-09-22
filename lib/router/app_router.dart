@@ -6,53 +6,55 @@ import '../screens/detail_screen.dart';
 import '../screens/films_screen.dart';
 import '../screens/home_screen.dart';
 import '../screens/settings_screen.dart';
+import '../services/film_service.dart';
 
-final GoRouter appRouter = GoRouter(
-  initialLocation: '/',
+GoRouter createAppRouter(FilmService filmService) {
+  return GoRouter(
+    initialLocation: '/',
+    routes: [
+      GoRoute(
+        path: '/',
+        name: 'home',
+        builder: (context, state) {
+          return const HomeScreen();
+        },
+      ),
+      GoRoute(
+        path: '/films',
+        name: 'films',
+        builder: (context, state) {
+          return FilmsScreen(
+            filmService: filmService,
+          );
+        },
+      ),
+      GoRoute(
+        path: '/detail',
+        name: 'detail',
+        builder: (context, state) {
+          final film = state.extra as Film;
 
-  routes: [
-    GoRoute(
-      path: '/',
-      name: 'home',
-      builder: (context, state) {
-        return const HomeScreen();
-      },
-    ),
-
-    GoRoute(
-      path: '/films',
-      name: 'films',
-      builder: (context, state) {
-        return const FilmsScreen();
-      },
-    ),
-
-    GoRoute(
-      path: '/detail',
-      name: 'detail',
-      builder: (context, state) {
-        final film = state.extra as Film;
-
-        return DetailScreen(
-          film: film,
-        );
-      },
-    ),
-
-    GoRoute(
-      path: '/add',
-      name: 'add',
-      builder: (context, state) {
-        return const AddFilmScreen();
-      },
-    ),
-
-    GoRoute(
-      path: '/settings',
-      name: 'settings',
-      builder: (context, state) {
-        return const SettingsScreen();
-      },
-    ),
-  ],
-);
+          return DetailScreen(
+            film: film,
+          );
+        },
+      ),
+      GoRoute(
+        path: '/add',
+        name: 'add',
+        builder: (context, state) {
+          return AddFilmScreen(
+            filmService: filmService,
+          );
+        },
+      ),
+      GoRoute(
+        path: '/settings',
+        name: 'settings',
+        builder: (context, state) {
+          return const SettingsScreen();
+        },
+      ),
+    ],
+  );
+}

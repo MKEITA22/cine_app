@@ -1,203 +1,155 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
-import '../data/films.dart';
-import '../models/film.dart';
+import '../services/film_service.dart';
+import '../widgets/empty_state_widget.dart';
 import '../widgets/film_card.dart';
 import '../widgets/genre_chip.dart';
 import '../widgets/search_bar_widget.dart';
 
 class FilmsScreen extends StatefulWidget {
-  const FilmsScreen({super.key});
+  final FilmService filmService;
+
+  const FilmsScreen({
+    super.key,
+    required this.filmService,
+  });
 
   @override
   State<FilmsScreen> createState() => _FilmsScreenState();
 }
 
 class _FilmsScreenState extends State<FilmsScreen> {
-  String recherche = '';
-
-  String genreSelectionne = 'Tous';
-
-  List<String> get genres {
-    return [
-      'Tous',
-      ...films.map(
-        (film) => film.genre,
-      ).toSet(),
-    ];
-  }
-
-  List<Film> get filmsFiltres {
-    return films.where((film) {
-      final titreCorrespond = film.titre
-          .toLowerCase()
-          .contains(
-            recherche.toLowerCase(),
-          );
-
-      final genreCorrespond =
-          genreSelectionne == 'Tous' ||
-              film.genre == genreSelectionne;
-
-      return titreCorrespond && genreCorrespond;
-    }).toList();
-  }
+  String _recherche = '';
+  String? _genreSelectionne;
 
   @override
   Widget build(BuildContext context) {
+    final films = widget.filmService.rechercher(
+      recherche: _recherche,
+      genre: _genreSelectionne,
+    );
+
+    final genres = widget.filmService.genres;
+
     return Scaffold(
       appBar: AppBar(
-        title: const Text(
-          'Nos films',
-        ),
-      ),
-
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          context.go('/add');
-        },
-
-        child: const Icon(
-          Icons.add,
-        ),
-      ),
-
-      body: Column(
-        children: [
-          SearchBarWidget(
-            onChanged: (value) {
-              setState(() {
-                recherche = value;
-              });
+        title: const Text('Films'),
+        actions: [
+          IconButton(
+            onPressed: () {
+              context.goNamed('settings');
             },
+            icon: const Icon(Icons.settings),
           ),
-
-          SizedBox(
-            height: 55,
-
-            child: ListView(
-              scrollDirection: Axis.horizontal,
-
-              padding: const EdgeInsets.symmetric(
-                horizontal: 8,
-              ),
-
-              children: genres.map((genre) {
-                return Padding(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 4,
-                  ),
-
-                  child: GenreChip(
-                    genre: genre,
-
-                    selected:
-                        genre == genreSelectionne,
-
+        ],
+      ),
+      floatingActionButton: FloatingActionButton.extended(
+        onPressed: () {
+          context.goNamed('add');
+        },
+        icon: const Icon(Icons.add),
+        label: const Text('Ajouter'),
+      ),
+      body: Padding(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          children: [
+            SearchBarWidget(
+              onChanged: (value) {
+                setState(() {
+                  _recherche = value;
+                });
+              },
+            ),
+            const SizedBox(height: 12),
+            SizedBox(
+              height: 50,
+              child: ListView(
+                scrollDirection: Axis.horizontal,
+                children: [
+                  GenreChip(
+                    genre: 'Tous',
+                    selected: _genreSelectionne == null,
                     onSelected: () {
                       setState(() {
-                        genreSelectionne = genre;
+                        _genreSelectionne = null;
                       });
                     },
                   ),
-                );
-              }).toList(),
-            ),
-          ),
-
-          const SizedBox(height: 5),
-
-          Expanded(
-            child: filmsFiltres.isEmpty
-                ? const Center(
-                    child: Column(
-                      mainAxisAlignment:
-                          MainAxisAlignment.center,
-
-                      children: [
-                        Icon(
-                          Icons.search_off,
-                          size: 60,
-                        ),
-
-                        SizedBox(height: 10),
-
-                        Text(
-                          'Aucun film trouvé.',
-                        ),
-                      ],
+                  ...genres.map(
+                    (genre) => GenreChip(
+                      genre: genre,
+                      selected:
+                          _genreSelectionne == genre,
+                      onSelected: () {
+                        setState(() {
+                          _genreSelectionne = genre;
+                        });
+                      },
                     ),
-                  )
-                : LayoutBuilder(
-                    builder: (
-                      context,
-                      constraints,
-                    ) {
-                      if (constraints.maxWidth >= 700) {
-                        return GridView.builder(
+                  ),
+                ],
+              ),
+            ),
+            const SizedBox(height: 12),
+            Expanded(
+              child: films.isEmpty
+                  ? const EmptyStateWidget(
+                      message:
+                          'Aucun film ne correspond à votre recherche.',
+                    )
+                  : LayoutBuilder(
+                      builder: (context, constraints) {
+                        if (constraints.maxWidth >= 700) {
+                          return GridView.builder(
+                            padding:
+                                const EdgeInsets.only(bottom: 80),
+                            gridDelegate:
+                                const SliverGridDelegateWithFixedCrossAxisCount(
+                              crossAxisCount: 2,
+                              childAspectRatio: 2.2,
+                            ),
+                            itemCount: films.length,
+                            itemBuilder: (context, index) {
+                              final film = films[index];
+
+                              return FilmCard(
+                                film: film,
+                                onTap: () {
+                                  context.goNamed(
+                                    'detail',
+                                    extra: film,
+                                  );
+                                },
+                              );
+                            },
+                          );
+                        }
+
+                        return ListView.builder(
                           padding:
-                              const EdgeInsets.all(8),
-
-                          gridDelegate:
-                              const SliverGridDelegateWithFixedCrossAxisCount(
-                            crossAxisCount: 2,
-
-                            childAspectRatio: 3,
-                          ),
-
-                          itemCount:
-                              filmsFiltres.length,
-
-                          itemBuilder:
-                              (context, index) {
-                            final film =
-                                filmsFiltres[index];
+                              const EdgeInsets.only(bottom: 80),
+                          itemCount: films.length,
+                          itemBuilder: (context, index) {
+                            final film = films[index];
 
                             return FilmCard(
                               film: film,
-
                               onTap: () {
-                                context.go(
-                                  '/detail',
+                                context.goNamed(
+                                  'detail',
                                   extra: film,
                                 );
                               },
                             );
                           },
                         );
-                      }
-
-                      return ListView.builder(
-                        padding:
-                            const EdgeInsets.only(
-                          bottom: 80,
-                        ),
-
-                        itemCount:
-                            filmsFiltres.length,
-
-                        itemBuilder:
-                            (context, index) {
-                          final film =
-                              filmsFiltres[index];
-
-                          return FilmCard(
-                            film: film,
-
-                            onTap: () {
-                              context.go(
-                                '/detail',
-                                extra: film,
-                              );
-                            },
-                          );
-                        },
-                      );
-                    },
-                  ),
-          ),
-        ],
+                      },
+                    ),
+            ),
+          ],
+        ),
       ),
     );
   }

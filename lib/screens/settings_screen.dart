@@ -7,85 +7,51 @@ class SettingsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final bool modeSombre =
-        themeController.themeMode ==
-            ThemeMode.dark;
-
     return Scaffold(
       appBar: AppBar(
-        title: const Text(
-          'Paramètres',
-        ),
+        title: const Text('Paramètres'),
       ),
-
-      body: ListView(
-        padding: const EdgeInsets.all(20),
-
-        children: [
-          Card(
-            child: SwitchListTile(
-              title: const Text(
-                'Mode sombre',
+      body: AnimatedBuilder(
+        animation: themeController,
+        builder: (context, child) {
+          return ListView(
+            padding: const EdgeInsets.all(16),
+            children: [
+              Card(
+                child: SwitchListTile(
+                  title: const Text('Mode sombre'),
+                  subtitle: const Text(
+                    'Modifier l apparence de l application',
+                  ),
+                  secondary: const Icon(Icons.dark_mode),
+                  value: themeController.isDark,
+                  onChanged: (value) {
+                    themeController.setDarkMode(value);
+                  },
+                ),
               ),
-
-              subtitle: Text(
-                modeSombre
-                    ? 'Le mode sombre est activé'
-                    : 'Le mode clair est activé',
+              const SizedBox(height: 16),
+              const Card(
+                child: ListTile(
+                  leading: Icon(Icons.info),
+                  title: Text('À propos'),
+                  subtitle: Text(
+                    'CineApp — Projet Flutter multi-écrans',
+                  ),
+                ),
               ),
-
-              secondary: Icon(
-                modeSombre
-                    ? Icons.dark_mode
-                    : Icons.light_mode,
+              const Card(
+                child: ListTile(
+                  leading: Icon(Icons.code),
+                  title: Text('Technologies'),
+                  subtitle: Text(
+                    'Flutter, Dart et GoRouter',
+                  ),
+                ),
               ),
-
-              value: modeSombre,
-
-              onChanged: (value) {
-                themeController.toggleTheme(
-                  value,
-                );
-              },
-            ),
-          ),
-
-          const SizedBox(height: 20),
-
-          Card(
-            child: const ListTile(
-              leading: Icon(
-                Icons.info_outline,
-              ),
-
-              title: Text(
-                'À propos',
-              ),
-
-              subtitle: Text(
-                'CinéApp — Projet Flutter débutant',
-              ),
-            ),
-          ),
-
-          const SizedBox(height: 10),
-
-          const Card(
-            child: ListTile(
-              leading: Icon(
-                Icons.code,
-              ),
-
-              title: Text(
-                'Technologies',
-              ),
-
-              subtitle: Text(
-                'Flutter • Dart • GoRouter',
-              ),
-            ),
-          ),
-        ],
+            ],
+          );
+        },
       ),
     );
   }
